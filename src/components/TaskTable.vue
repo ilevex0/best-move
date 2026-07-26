@@ -1,8 +1,8 @@
 <template>
   <h3>Todas as tasks</h3>
   <el-table :data="taskStore.tasks" stripe style="width: 100%">
-      <el-table-column prop="time" label="Time" width="200" />
-    <el-table-column prop="title" label="Title" />
+      <el-table-column prop="time" label="Time" width="80" />
+    <el-table-column prop="title" label="Title" width="auto" />
   </el-table>
 </template>
 

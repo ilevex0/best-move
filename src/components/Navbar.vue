@@ -26,7 +26,9 @@ const handleSelect = (key: string, keyPath: string[]) => {
 </script>
 
 <style scoped>
-.el-menu--horizontal > .el-menu-item:nth-child(1) {
-  margin-right: auto;
+.el-menu-demo {
+  position: fixed;
+  width: 100%;
+  z-index: 999;
 }
 </style>
