@@ -156,9 +156,46 @@ export const useTaskStore = defineStore('task', () => {
     }
     return activeTask
   })
+
+  // Encontra a tarefa atual e a próxima para definir o intervalo de tempo
+  const activeTaskInterval = computed(() => {
+    const tasks = sortedTasks.value
+    if (tasks.length === 0) return null
+
+    let currentIndex = -1
+
+    for (let i = 0; i < tasks.length; i++) {
+      const taskMinutes = timeStringToMinutes(tasks[i].time)
+      if (currentTotalMinutes.value >= taskMinutes) {
+        currentIndex = i
+      } else {
+        break
+      }
+    }
+
+    if (currentIndex === -1) {
+      // Antes da primeira tarefa do dia
+      return {
+        current: null,
+        next: tasks[0],
+        startMinutes: timeStringToMinutes(tasks[0].time) - 60, // Exemplo de margem
+        endMinutes: timeStringToMinutes(tasks[0].time)
+      }
+    }
+
+    const current = tasks[currentIndex]
+    const next = tasks[currentIndex + 1] || null
+    const startMinutes = timeStringToMinutes(current.time)
+    const endMinutes = next ? timeStringToMinutes(next.time) : startMinutes + 60
+
+    return { current, next, startMinutes, endMinutes }
+  })
+
   return {
     tasks,
+    currentTotalMinutes,
     currentTime,
-    currentTask
+    currentTask,
+    activeTaskInterval
   }
 })
