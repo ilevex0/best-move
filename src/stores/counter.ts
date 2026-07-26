@@ -1,12 +1,13 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
-  }
+export const useTaskStore = defineStore('task', () => {
+  const tasks = ref([
+    {
+      title: "Test",
+      time: "00:00"
+    }
+  ])
 
-  return { count, doubleCount, increment }
+  return { tasks }
 })
