@@ -7,10 +7,16 @@ import CurrentTask from './components/CurrentTask.vue';
 
 <template>
   <Navbar />
-  <CurrentTask />
-  <ProgressBar />
-  <TaskTable />
+  <div style="padding: 5px 10px;">
+    <CurrentTask />
+    <ProgressBar />
+    <TaskTable />
+  </div>
 
 </template>
 
-<style scoped></style>
+<style>
+body {
+  font-family: "Inter", sans-serif;
+}
+</style>
