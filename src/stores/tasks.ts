@@ -1,6 +1,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { defineStore } from 'pinia'
 
+interface Task {
+  title: string
+  time: string
+}
+
 export const useTaskStore = defineStore('task', () => {
   const tasks = ref([
     { title: "Teste 1", time: "00:00" },
@@ -117,7 +122,9 @@ export const useTaskStore = defineStore('task', () => {
 
   // CONVERTE O FORMATO 01:00 PARA MINUTOS
   function timeStringToMinutes(timeStr: string): number {
-    const [hours, minutes] = timeStr.split(":").map(Number)
+    const parts = timeStr.split(":")
+    const hours = Number(parts[0]) || 0
+    const minutes = Number(parts[1]) || 0
     return (hours * 60) + minutes
   }
 
@@ -159,13 +166,15 @@ export const useTaskStore = defineStore('task', () => {
 
   // Encontra a tarefa atual e a próxima para definir o intervalo de tempo
   const activeTaskInterval = computed(() => {
-    const tasks = sortedTasks.value
-    if (tasks.length === 0) return null
+    const taskList = sortedTasks.value
+    if (taskList.length === 0) return null
 
     let currentIndex = -1
 
-    for (let i = 0; i < tasks.length; i++) {
-      const taskMinutes = timeStringToMinutes(tasks[i].time)
+    for (let i = 0; i < taskList.length; i++) {
+      const task = taskList[i]
+      if (!task) continue
+      const taskMinutes = timeStringToMinutes(task.time)
       if (currentTotalMinutes.value >= taskMinutes) {
         currentIndex = i
       } else {
@@ -174,17 +183,19 @@ export const useTaskStore = defineStore('task', () => {
     }
 
     if (currentIndex === -1) {
-      // Antes da primeira tarefa do dia
+      const firstTask = taskList[0]
+      if (!firstTask) return null
       return {
         current: null,
-        next: tasks[0],
-        startMinutes: timeStringToMinutes(tasks[0].time) - 60, // Exemplo de margem
-        endMinutes: timeStringToMinutes(tasks[0].time)
+        next: firstTask,
+        startMinutes: timeStringToMinutes(firstTask.time) - 60, // Exemplo de margem
+        endMinutes: timeStringToMinutes(firstTask.time)
       }
     }
 
-    const current = tasks[currentIndex]
-    const next = tasks[currentIndex + 1] || null
+    const current = taskList[currentIndex]
+    const next = taskList[currentIndex + 1] || null
+    if (!current) return null
     const startMinutes = timeStringToMinutes(current.time)
     const endMinutes = next ? timeStringToMinutes(next.time) : startMinutes + 60
 
