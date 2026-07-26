@@ -1,6 +1,6 @@
 <template>
   <div class="demo-progress">
-    <h3>Progresso do Bloco Atual</h3>
+    <h3>Progresso Atual</h3>
     <el-progress :percentage="taskProgress" :format="formatProgress" />
   </div>
 </template>
